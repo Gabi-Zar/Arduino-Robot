@@ -57,13 +57,13 @@ void loop() {
         sendLog("LEFT");
     }
     else if(direction == "FORWARD") {
-  	    activateMotors(0, 1);
-        activateMotors(1, 0);
+  	    activateMotors(0, 0);
+        activateMotors(1, 1);
         sendLog("FORWARD");
     }
     else if(direction == "BACKWARD") {
-  	    activateMotors(0, 0);
-        activateMotors(1, 1);
+  	    activateMotors(0, 1);
+        activateMotors(1, 0);
         sendLog("BACKWARD");
     }
     directionCooldown -= 1;
