@@ -4,7 +4,7 @@ import time
 from arduino.app_utils import App, Bridge
 
 
-WS_URL = "ws://gabizar.top:8765"
+WS_URL = "wss://arduino.gabizar.top"
 ws = None
 
 
@@ -22,6 +22,7 @@ def connect():
     while True:
         try:
             ws = websocket.create_connection(WS_URL)
+            ws.send("ARDUINO-INITIALIZE")
             log("connected to the server")
             break
         except Exception as e:
