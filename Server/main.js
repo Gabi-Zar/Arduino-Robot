@@ -28,6 +28,11 @@ wss.on("connection", (ws) => {
         if (text === "ARDUINO-INITIALIZE") {
             arduino = ws;
             console.log("arduino registered");
+            for (const client of wss.clients) {
+                if (client !== arduino && client.readyState === WebSocket.OPEN) {
+                    client.send("ARDUINO-CONNECTED");
+                }
+            }
             return;
         }
 
@@ -37,10 +42,19 @@ wss.on("connection", (ws) => {
         }
     });
 
+    if (arduino) {
+        ws.send("ARDUINO-CONNECTED");
+    }
+
     ws.on("close", () => {
         if (ws === arduino) {
             arduino = null;
             console.log("arduino disconnected");
+            for (const client of wss.clients) {
+                if (client !== arduino && client.readyState === WebSocket.OPEN) {
+                    client.send("ARDUINO-DISCONNECTED");
+                }
+            }
         }
     });
 });
