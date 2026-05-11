@@ -44,6 +44,14 @@ def loop():
 
         if msg:
             log(f"INPUT: {msg}")
+            if msg == "FORWARD":
+                Bridge.call("go_forward")
+            elif msg == "BACKWARD":
+                Bridge.call("go_backward")
+            elif msg == "LEFT":
+                Bridge.call("go_left")
+            elif msg == "RIGHT":
+                Bridge.call("go_right")
 
     except Exception as e:
         log(f"ws error: {e}")
