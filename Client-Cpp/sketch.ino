@@ -15,18 +15,23 @@ void sendLog(String message) {
 
 void right() {
     direction = "RIGHT";
+    directionCooldown = directionCooldownDefault;
 }
 void left() {
     direction = "LEFT";
+    directionCooldown = directionCooldownDefault;
 }
 void forward() {
     direction = "FORWARD";
+    directionCooldown = directionCooldownDefault;
 }
 void backward() {
     direction = "BACKWARD";
+    directionCooldown = directionCooldownDefault;
 }
 void stop() {
     direction = "STOP";
+    directionCooldown = directionCooldownDefault;
 }
 
 void setup() {
@@ -56,13 +61,13 @@ void loop() {
         return;
     }
     else if(direction == "RIGHT") {
-        activateMotors(0, 0);
-        activateMotors(1, 0);
+        activateMotors(0, 1);
+        activateMotors(1, 1);
         sendLog("RIGHT");
     }
     else if(direction == "LEFT") {
-  	    activateMotors(0, 1);
-        activateMotors(1, 1);
+  	    activateMotors(0, 0);
+        activateMotors(1, 0);
         sendLog("LEFT");
     }
     else if(direction == "FORWARD") {
@@ -79,7 +84,7 @@ void loop() {
 }
 
 void activateMotors(int motorNumber, int motorState) {
-    const int MOTORSPINS[2][2] = {{6, 7}, {8, 9}}; // AIN1, AIN2, BIN1, BIN2
+    const int MOTORSPINS[2][2] = {{6, 7}, {8, 9}}; // BIN2, BIN1, AIN2, AIN1
 
     if(motorState == 0) {
         digitalWrite(MOTORSPINS[motorNumber][0], 0);
