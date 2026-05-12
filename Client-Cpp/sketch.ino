@@ -1,7 +1,7 @@
 #include <Arduino_RouterBridge.h>
 
 String direction = "";
-int directionCooldownDefault = 2000;
+int directionCooldownDefault = 10000;
 int directionCooldown = directionCooldownDefault;
 
 void sendLog(String message) {
@@ -20,6 +20,9 @@ void forward() {
 void backward() {
     direction = "BACKWARD";
 }
+void stop() {
+    direction = "STOP";
+}
 
 void setup() {
     Bridge.begin();
@@ -27,6 +30,7 @@ void setup() {
     Bridge.provide_safe("go_left", left);
     Bridge.provide_safe("go_forward", forward);
     Bridge.provide_safe("go_backward", backward);
+    Bridge.provide_safe("stop", stop);
 
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
@@ -38,11 +42,11 @@ void setup() {
 }
 
 void loop() {
-    if (directionCooldown <= 0) {
+    if (directionCooldown <= 0 || direction == "STOP") {
   	    activateMotors(0, 2);
         activateMotors(1, 2);
         directionCooldown = directionCooldownDefault;
-        direction = "";
+        direction = "STOP";
         sendLog("STOP");
         return;
     }

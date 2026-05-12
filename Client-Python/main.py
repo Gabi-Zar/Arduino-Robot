@@ -52,6 +52,8 @@ def loop():
                 Bridge.call("go_left")
             elif msg == "RIGHT":
                 Bridge.call("go_right")
+            elif msg == "STOP":
+                Bridge.call("stop")
 
     except Exception as e:
         log(f"ws error: {e}")
