@@ -2,14 +2,20 @@ import websocket
 import time
 
 from arduino.app_utils import App, Bridge
+from datetime import datetime
 
 
 WS_URL = "wss://arduino.gabizar.top"
 ws = None
+latestLog = ""
 
 
 def log(msg, t="PYTHON"):
-    print(f"{t}: {msg}")
+    global latestLog
+    if msg == latestLog:
+        return
+    latestLog = msg
+    print(f"[{datetime.now()}] {t}: {msg}")
 
 
 def on_mcu(msg):

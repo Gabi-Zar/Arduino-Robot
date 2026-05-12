@@ -1,10 +1,15 @@
 #include <Arduino_RouterBridge.h>
 
 String direction = "";
+String latestLog = "";
 int directionCooldownDefault = 10000;
 int directionCooldown = directionCooldownDefault;
 
 void sendLog(String message) {
+    if (message == latestLog) {
+        return;
+    }
+    latestLog = message;
     Bridge.notify("sendLog", message);
 }
 
