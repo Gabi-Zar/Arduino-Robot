@@ -40,3 +40,38 @@ function sendCmd(cmd) {
 }
 
 connect();
+
+let lastSend = 0;
+let isStopped = false;
+const delay = 5000;
+
+document.addEventListener("keydown", (event) => {
+    console.log("Key pressed:", event.key);
+
+    if (event.key === "z" || event.key === "ArrowUp") {
+        move("FORWARD");
+    } else if (event.key === "s" || event.key === "ArrowDown") {
+        move("BACKWARD");
+    } else if (event.key === "q" || event.key === "ArrowLeft") {
+        move("LEFT");
+    } else if (event.key === "d" || event.key === "ArrowRight") {
+        move("RIGHT");
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    if (!isStopped) {
+        sendCmd("STOP");
+        lastSend = 0;
+        isStopped = true;
+    }
+});
+
+function move(direction) {
+    const now = Date.now();
+    if (now - lastSend >= delay) {
+        lastSend = now;
+        sendCmd(direction);
+        isStopped = false;
+    }
+}
