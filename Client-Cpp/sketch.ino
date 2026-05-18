@@ -1,9 +1,20 @@
 #include <Arduino_RouterBridge.h>
+#include <Servo.h>
 
 String direction = "";
 String latestLog = "";
 int directionCooldownDefault = 10000;
 int directionCooldown = directionCooldownDefault;
+
+Servo servo1;  // op / fp
+Servo servo2;  // lp / bp
+Servo servo3;  // lb / bb
+Servo servo4;  // gb / db
+
+int pos1 = 90;
+int pos2 = 90;
+int pos3 = 90;
+int pos4 = 90;
 
 void sendLog(String message) {
     if (message == latestLog) {
@@ -41,6 +52,14 @@ void setup() {
     Bridge.provide_safe("go_forward", forward);
     Bridge.provide_safe("go_backward", backward);
     Bridge.provide_safe("stop", stop);
+    Bridge.provide_safe("op", op); // ouvrir pince
+    Bridge.provide_safe("fp", fp); // fermer pince 
+    Bridge.provide_safe("lp", lp); // lever pince
+    Bridge.provide_safe("bp", bp); // bas pince
+    Bridge.provide_safe("lb", lb); // lever bras
+    Bridge.provide_safe("bb", bb); // bas bras
+    Bridge.provide_safe("gb", gb); // gauche bras
+    Bridge.provide_safe("db", db); // droite bras
 
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
@@ -98,4 +117,70 @@ void activateMotors(int motorNumber, int motorState) {
         digitalWrite(MOTORSPINS[motorNumber][0], 0);
         digitalWrite(MOTORSPINS[motorNumber][1], 0);
     }
+}
+
+int clamp(int val) {
+  if (val < 0)   return 0;
+  if (val > 180) return 180;
+  return val;
+}
+
+// =============================================
+// Servo 1 — op et fp
+// =============================================
+void op() {
+  pos1 = clamp(pos1 + 5);
+  servo1.write(pos1);
+  Serial.print("op → Servo1 : "); Serial.println(pos1);
+}
+
+void fp() {
+  pos1 = clamp(pos1 - 5);
+  servo1.write(pos1);
+  Serial.print("fp → Servo1 : "); Serial.println(pos1);
+}
+
+// =============================================
+// Servo 2 — lp et bp
+// =============================================
+void lp() {
+  pos2 = clamp(pos2 + 5);
+  servo2.write(pos2);
+  Serial.print("lp → Servo2 : "); Serial.println(pos2);
+}
+
+void bp() {
+  pos2 = clamp(pos2 - 5);
+  servo2.write(pos2);
+  Serial.print("bp → Servo2 : "); Serial.println(pos2);
+}
+
+// =============================================
+// Servo 3 — lb et bb
+// =============================================
+void lb() {
+  pos3 = clamp(pos3 + 5);
+  servo3.write(pos3);
+  Serial.print("lb → Servo3 : "); Serial.println(pos3);
+}
+
+void bb() {
+  pos3 = clamp(pos3 - 5);
+  servo3.write(pos3);
+  Serial.print("bb → Servo3 : "); Serial.println(pos3);
+}
+
+// =============================================
+// Servo 4 — gb et db
+// =============================================
+void gb() {
+  pos4 = clamp(pos4 + 5);
+  servo4.write(pos4);
+  Serial.print("gb → Servo4 : "); Serial.println(pos4);
+}
+
+void db() {
+  pos4 = clamp(pos4 - 5);
+  servo4.write(pos4);
+  Serial.print("db → Servo4 : "); Serial.println(pos4);
 }
