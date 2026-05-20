@@ -3,12 +3,15 @@
     <body>
         <h1>Controle Arduino</h1>
 
-        <button onclick="sendCmd('LEFT')">LEFT</button>
-        <button onclick="sendCmd('RIGHT')">RIGHT</button>
-        <button onclick="sendCmd('FORWARD')">FORWARD</button>
-        <button onclick="sendCmd('BACKWARD')">BACKWARD</button>
-        <button onclick="sendCmd('STOP')">STOP</button>
+        <button onclick="lastDirection = { type: 'keyboard', command: 'LEFT' }">LEFT</button>
+        <button onclick="lastDirection = { type: 'keyboard', command: 'RIGHT' }">RIGHT</button>
+        <button onclick="lastDirection = { type: 'keyboard', command: 'FORWARD' }">FORWARD</button>
+        <button onclick="lastDirection = { type: 'keyboard', command: 'BACKWARD' }">BACKWARD</button>
+        <button onclick="lastDirection = { type: 'keyboard', command: 'STOP' }">STOP</button>
 
+        <div id="movementJoystick" style="width: 200px; height: 200px; margin-bottom: 20px"></div>
+
+        <script src="joy.min.js"></script>
         <script src="script.js"></script>
     </body>
 </html>
