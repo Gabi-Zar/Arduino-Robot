@@ -45,6 +45,90 @@ void stop() {
     directionCooldown = directionCooldownDefault;
 }
 
+
+void activateMotors(int motorNumber, int motorState) {
+    const int MOTORSPINS[2][2] = {{6, 7}, {8, 9}}; // BIN2, BIN1, AIN2, AIN1
+
+    if(motorState == 0) {
+        digitalWrite(MOTORSPINS[motorNumber][0], 0);
+        digitalWrite(MOTORSPINS[motorNumber][1], 1);
+    }
+    else if(motorState == 1) {
+        digitalWrite(MOTORSPINS[motorNumber][0], 1);
+        digitalWrite(MOTORSPINS[motorNumber][1], 0);
+    }
+    else if(motorState == 2) {
+        digitalWrite(MOTORSPINS[motorNumber][0], 0);
+        digitalWrite(MOTORSPINS[motorNumber][1], 0);
+    }
+}
+
+int clamp(int val) {
+  if (val < 0)   return 0;
+  if (val > 180) return 180;
+  return val;
+}
+
+// =============================================
+// Servo 1 — op et fp
+// =============================================
+void op() {
+  pos1 = clamp(pos1 + 5);
+  servo1.write(pos1);
+  sendLog("op → Servo1 : "); sendLog(String(pos1));
+}
+
+void fp() {
+  pos1 = clamp(pos1 - 5);
+  servo1.write(pos1);
+  sendLog("fp → Servo1 : "); sendLog(String(pos1));
+}
+
+// =============================================
+// Servo 2 — lp et bp
+// =============================================
+void lp() {
+  pos2 = clamp(pos2 + 5);
+  servo2.write(pos2);
+  sendLog("lp → Servo2 : "); sendLog(String(pos2));
+}
+
+void bp() {
+  pos2 = clamp(pos2 - 5);
+  servo2.write(pos2);
+  sendLog("bp → Servo2 : "); sendLog(String(pos2));
+}
+
+// =============================================
+// Servo 3 — lb et bb
+// =============================================
+void lb() {
+  pos3 = clamp(pos3 + 5);
+  servo3.write(pos3);
+  sendLog("lb → Servo3 : "); sendLog(String(pos3));
+}
+
+void bb() {
+  pos3 = clamp(pos3 - 5);
+  servo3.write(pos3);
+  sendLog("bb → Servo3 : "); sendLog(String(pos3));
+}
+
+// =============================================
+// Servo 4 — gb et db
+// =============================================
+void gb() {
+  pos4 = clamp(pos4 + 5);
+  servo4.write(pos4);
+  sendLog("gb → Servo4 : "); sendLog(String(pos4));
+}
+
+void db() {
+  pos4 = clamp(pos4 - 5);
+  servo4.write(pos4);
+  sendLog("db → Servo4 : "); sendLog(String(pos4));
+}
+
 void setup() {
     Bridge.begin();
     Bridge.provide_safe("go_right", right);
@@ -65,6 +149,16 @@ void setup() {
     pinMode(7, OUTPUT);
     pinMode(8, OUTPUT);
     pinMode(9, OUTPUT);
+
+    servo1.attach(2);
+    servo2.attach(3);
+    servo3.attach(4);
+    servo4.attach(5);
+
+    servo1.write(pos1);
+    servo2.write(pos2);
+    servo3.write(pos3);
+    servo4.write(pos4);
 
     delay(10000); // wait for python to initialize
     sendLog("MCU ready");
@@ -100,87 +194,4 @@ void loop() {
         sendLog("BACKWARD");
     }
     directionCooldown -= 1;
-}
-
-void activateMotors(int motorNumber, int motorState) {
-    const int MOTORSPINS[2][2] = {{6, 7}, {8, 9}}; // BIN2, BIN1, AIN2, AIN1
-
-    if(motorState == 0) {
-        digitalWrite(MOTORSPINS[motorNumber][0], 0);
-        digitalWrite(MOTORSPINS[motorNumber][1], 1);
-    }
-    else if(motorState == 1) {
-        digitalWrite(MOTORSPINS[motorNumber][0], 1);
-        digitalWrite(MOTORSPINS[motorNumber][1], 0);
-    }
-    else if(motorState == 2) {
-        digitalWrite(MOTORSPINS[motorNumber][0], 0);
-        digitalWrite(MOTORSPINS[motorNumber][1], 0);
-    }
-}
-
-int clamp(int val) {
-  if (val < 0)   return 0;
-  if (val > 180) return 180;
-  return val;
-}
-
-// =============================================
-// Servo 1 — op et fp
-// =============================================
-void op() {
-  pos1 = clamp(pos1 + 5);
-  servo1.write(pos1);
-  Serial.print("op → Servo1 : "); Serial.println(pos1);
-}
-
-void fp() {
-  pos1 = clamp(pos1 - 5);
-  servo1.write(pos1);
-  Serial.print("fp → Servo1 : "); Serial.println(pos1);
-}
-
-// =============================================
-// Servo 2 — lp et bp
-// =============================================
-void lp() {
-  pos2 = clamp(pos2 + 5);
-  servo2.write(pos2);
-  Serial.print("lp → Servo2 : "); Serial.println(pos2);
-}
-
-void bp() {
-  pos2 = clamp(pos2 - 5);
-  servo2.write(pos2);
-  Serial.print("bp → Servo2 : "); Serial.println(pos2);
-}
-
-// =============================================
-// Servo 3 — lb et bb
-// =============================================
-void lb() {
-  pos3 = clamp(pos3 + 5);
-  servo3.write(pos3);
-  Serial.print("lb → Servo3 : "); Serial.println(pos3);
-}
-
-void bb() {
-  pos3 = clamp(pos3 - 5);
-  servo3.write(pos3);
-  Serial.print("bb → Servo3 : "); Serial.println(pos3);
-}
-
-// =============================================
-// Servo 4 — gb et db
-// =============================================
-void gb() {
-  pos4 = clamp(pos4 + 5);
-  servo4.write(pos4);
-  Serial.print("gb → Servo4 : "); Serial.println(pos4);
-}
-
-void db() {
-  pos4 = clamp(pos4 - 5);
-  servo4.write(pos4);
-  Serial.print("db → Servo4 : "); Serial.println(pos4);
 }
