@@ -1,34 +1,68 @@
 <!doctype html>
-<html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>Arduino Control</title>
+        <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
     <body>
-        <h1>Controle Arduino</h1>
+        <header>
+            <div class="header-left">
+                <span class="label">SERVER</span>
+                <div id="ws-indicator" class="indicator indicator--off"></div>
+                <span id="ws-label" class="status-text">DISCONNECTED</span>
+            </div>
+            <h1 class="title">CONTROLE<span class="title-accent">/</span>ARDUINO</h1>
+            <div class="header-right">
+                <span class="label">ARDUINO</span>
+                <div id="arduino-indicator" class="indicator indicator--off"></div>
+                <span id="arduino-label" class="status-text">OFFLINE</span>
+            </div>
+        </header>
 
-        <button onclick="lastDirection = { type: 'keyboard', command: 'LEFT' }">LEFT</button>
-        <button onclick="lastDirection = { type: 'keyboard', command: 'RIGHT' }">RIGHT</button>
-        <button onclick="lastDirection = { type: 'keyboard', command: 'FORWARD' }">FORWARD</button>
-        <button onclick="lastDirection = { type: 'keyboard', command: 'BACKWARD' }">BACKWARD</button>
-        <button onclick="lastDirection = { type: 'keyboard', command: 'STOP' }">STOP</button>
+        <main>
+            <section class="panel panel--tl" id="panel-move-joy">
+                <div class="panel-label">MOVEMENT</div>
+                <div id="movementJoystick" class="joystick-div"></div>
+            </section>
 
-        <div id="movementJoystick" style="width: 200px; height: 200px; margin-bottom: 20px"></div>
-        <div id="armJoystick" style="width: 200px; height: 200px; margin-bottom: 20px"></div>
+            <section class="panel panel--tr" id="panel-arm-joy">
+                <div class="panel-label">ARM</div>
+                <div id="armJoystick" class="joystick-div"></div>
+            </section>
 
-        <table>
-            <tr>
-                <td></td>
-                <td><button onmousedown="sendCmd('UP_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▲</button></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><button onmousedown="sendCmd('OPEN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">◀</button></td>
-                <td></td>
-                <td><button onmousedown="sendCmd('CLOSE_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▶</button></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><button onmousedown="sendCmd('DOWN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▼</button></td>
-                <td></td>
-            </tr>
-        </table>
+            <section class="panel panel--bl" id="panel-move-dpad">
+                <div class="panel-label">DIRECTION</div>
+                <div class="dpad">
+                    <button class="dpad-btn dpad-up" data-cmd="FORWARD" ontouchstart="dpadPress('FORWARD')" onmousedown="dpadPress('FORWARD')">▲</button>
+                    <button class="dpad-btn dpad-left" data-cmd="LEFT" ontouchstart="dpadPress('LEFT')" onmousedown="dpadPress('LEFT')">◀</button>
+                    <div class="dpad-center">
+                        <button class="dpad-btn dpad-stop" ontouchstart="dpadPress('STOP')" onmousedown="dpadPress('STOP')">■</button>
+                    </div>
+                    <button class="dpad-btn dpad-right" data-cmd="RIGHT" ontouchstart="dpadPress('RIGHT')" onmousedown="dpadPress('RIGHT')">▶</button>
+                    <button class="dpad-btn dpad-down" data-cmd="BACKWARD" ontouchstart="dpadPress('BACKWARD')" onmousedown="dpadPress('BACKWARD')">▼</button>
+                </div>
+            </section>
+
+            <section class="panel panel--br" id="panel-pince-dpad">
+                <div class="panel-label">GRIPPER</div>
+                <div class="dpad">
+                    <button class="dpad-btn dpad-up dpad-btn--accent" ontouchstart="sendCmd('UP_PINCE')" ontouchend="sendCmd('STOP_PINCE')" onmousedown="sendCmd('UP_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▲</button>
+                    <button class="dpad-btn dpad-left dpad-btn--accent" ontouchstart="sendCmd('OPEN_PINCE')" ontouchend="sendCmd('STOP_PINCE')" onmousedown="sendCmd('OPEN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">◀</button>
+                    <div class="dpad-center">
+                        <div class="dpad-icon">✕</div>
+                    </div>
+                    <button class="dpad-btn dpad-right dpad-btn--accent" ontouchstart="sendCmd('CLOSE_PINCE')" ontouchend="sendCmd('STOP_PINCE')" onmousedown="sendCmd('CLOSE_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▶</button>
+                    <button class="dpad-btn dpad-down dpad-btn--accent" ontouchstart="sendCmd('DOWN_PINCE')" ontouchend="sendCmd('STOP_PINCE')" onmousedown="sendCmd('DOWN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▼</button>
+                </div>
+            </section>
+
+            <div class="v-divider"></div>
+            <div class="h-divider"></div>
+            <div class="v-divider v-divider--bottom"></div>
+        </main>
 
         <script src="joy.min.js"></script>
         <script src="script.js"></script>
