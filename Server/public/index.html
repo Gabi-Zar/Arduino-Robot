@@ -10,6 +10,25 @@
         <button onclick="lastDirection = { type: 'keyboard', command: 'STOP' }">STOP</button>
 
         <div id="movementJoystick" style="width: 200px; height: 200px; margin-bottom: 20px"></div>
+        <div id="armJoystick" style="width: 200px; height: 200px; margin-bottom: 20px"></div>
+
+        <table>
+            <tr>
+                <td></td>
+                <td><button onmousedown="sendCmd('UP_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▲</button></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><button onmousedown="sendCmd('OPEN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">◀</button></td>
+                <td></td>
+                <td><button onmousedown="sendCmd('CLOSE_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▶</button></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button onmousedown="sendCmd('DOWN_PINCE')" onmouseup="sendCmd('STOP_PINCE')">▼</button></td>
+                <td></td>
+            </tr>
+        </table>
 
         <script src="joy.min.js"></script>
         <script src="script.js"></script>

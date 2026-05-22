@@ -60,6 +60,22 @@ def loop():
                 Bridge.call("go_right")
             elif msg == "STOP":
                 Bridge.call("stop")
+            elif msg == "UP_PINCE":
+                Bridge.call("lp")
+            elif msg == "DOWN_PINCE":
+                Bridge.call("bp")
+            elif msg == "OPEN_PINCE":
+                Bridge.call("op")
+            elif msg == "CLOSE_PINCE":
+                Bridge.call("fp")
+            elif msg == "UP_ARM":
+                Bridge.call("lb")
+            elif msg == "DOWN_ARM":
+                Bridge.call("bb")
+            elif msg == "LEFT_ARM":
+                Bridge.call("gb")
+            elif msg == "RIGHT_ARM":
+                Bridge.call("db")
 
     except Exception as e:
         log(f"ws error: {e}")

@@ -42,8 +42,10 @@ function sendCmd(cmd) {
 connect();
 
 let lastSend = 0;
+let lastArmSend = 0;
 let isStopped = false;
 let lastDirection = { type: "keyboard", command: "STOP" };
+let lastArmDirection = "STOP";
 
 document.addEventListener("keydown", (event) => {
     console.log("Key pressed:", event.key);
@@ -74,9 +76,16 @@ function move(direction) {
     }
 }
 
-var movementJoystick = new JoyStick("movementJoystick", {}, (stickData) => {
-    console.log(stickData.cardinalDirection);
+function moveArm(direction) {
+    if (direction === "STOP") return;
+    const now = Date.now();
+    if (now - lastArmSend >= 50) {
+        lastArmSend = now;
+        sendCmd(`${direction}_ARM`);
+    }
+}
 
+let movementJoystick = new JoyStick("movementJoystick", {}, (stickData) => {
     if (lastDirection.type === "keyboard" && lastDirection.command !== "STOP") {
         return;
     }
@@ -93,10 +102,26 @@ var movementJoystick = new JoyStick("movementJoystick", {}, (stickData) => {
     }
 });
 
+let armJoystick = new JoyStick("armJoystick", {}, (stickData) => {
+    console.log(stickData.cardinalDirection);
+
+    if (stickData.cardinalDirection === "N") {
+        lastArmDirection = "UP";
+    } else if (stickData.cardinalDirection === "S") {
+        lastArmDirection = "DOWN";
+    } else if (stickData.cardinalDirection === "W") {
+        lastArmDirection = "LEFT";
+    } else if (stickData.cardinalDirection === "E") {
+        lastArmDirection = "RIGHT";
+    } else if (stickData.cardinalDirection === "C") {
+        lastArmDirection = "STOP";
+    }
+});
+
 async function loop() {
     while (true) {
-        console.log(lastDirection.command);
         move(lastDirection.command);
+        moveArm(lastArmDirection);
 
         await delay(10);
     }
@@ -105,7 +130,5 @@ async function loop() {
 loop();
 
 function delay(ms) {
-    move(lastDirection.command);
-
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
