@@ -1,9 +1,12 @@
 #include <Arduino_RouterBridge.h>
 #include <Servo.h>
 
+const int directionCooldownDefault = 10000;
+const int IR_GAUCHE = 7;
+const int IR_DROIT  = 6;
+
 String direction = "";
 String latestLog = "";
-int directionCooldownDefault = 10000;
 int directionCooldown = directionCooldownDefault;
 
 Servo servo1;  // op / fp
@@ -15,6 +18,9 @@ int pos1 = 90;
 int pos2 = 90;
 int pos3 = 90;
 int pos4 = 90;
+
+bool isAutoPiloteActivated = false;
+
 
 void sendLog(String message) {
     if (message == latestLog) {
@@ -129,6 +135,10 @@ void db() {
   sendLog("db → Servo4 : "); sendLog(String(pos4));
 }
 
+void toggleAutoPilote() {
+    isAutoPiloteActivated = !isAutoPiloteActivated;
+}
+
 void setup() {
     Bridge.begin();
     Bridge.provide_safe("go_right", right);
@@ -144,6 +154,7 @@ void setup() {
     Bridge.provide_safe("bb", bb); // bas bras
     Bridge.provide_safe("gb", gb); // gauche bras
     Bridge.provide_safe("db", db); // droite bras
+    Bridge.provide_safe("toggle_auto_pilote", toggleAutoPilote);
 
     pinMode(6, OUTPUT);
     pinMode(7, OUTPUT);
@@ -160,11 +171,32 @@ void setup() {
     servo3.write(pos3);
     servo4.write(pos4);
 
+    pinMode(IR_GAUCHE, INPUT);
+    pinMode(IR_DROIT,  INPUT);
+
     delay(10000); // wait for python to initialize
     sendLog("MCU ready");
 }
 
 void loop() {
+    if (isAutoPiloteActivated) {
+        int captGauche = digitalRead(IR_GAUCHE);
+        int captDroit  = digitalRead(IR_DROIT);
+
+        if (captGauche == HIGH && captDroit == HIGH) {
+            forward();
+
+        } else if (captGauche == LOW && captDroit == HIGH) {
+            right();
+
+        } else if (captGauche == HIGH && captDroit == LOW) {
+            left();
+
+        } else {
+            stop();
+        }
+    }
+
     if (directionCooldown <= 0 || direction == "STOP") {
   	    activateMotors(0, 2);
         activateMotors(1, 2);
