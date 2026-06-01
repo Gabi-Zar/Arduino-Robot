@@ -76,6 +76,8 @@ def loop():
                 Bridge.call("gb")
             elif msg == "RIGHT_ARM":
                 Bridge.call("db")
+            elif msg == "TOGGLE_AUTO_PILOTE":
+                Bridge.call("toggle_auto_pilote")
 
     except Exception as e:
         log(f"ws error: {e}")
